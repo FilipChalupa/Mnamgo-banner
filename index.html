@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="cs">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mňamgo banner</title>
+		<style>
+			iframe {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				width: 100%;
+				height: 100%;
+				border: none;
+				display: none;
+
+				overflow: hidden;
+			}
+			iframe.is-active {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<iframe
+			class="mnamgo is-active"
+			src="https://mnamgo.cz/?group=mango"
+			scrolling="no"
+		></iframe>
+		<iframe class="time" src="https://just-time.eu/?hideSeconds"></iframe>
+		<script>
+			const IS_ACTIVE_CLASS = 'is-active'
+			const $mnamgo = document.querySelector('.mnamgo')
+			const $time = document.querySelector('.time')
+			const showMnamgoSince = '11:30:00' && '10:00:00'
+			const showMnamgoUntil = '12:30:00'
+			let isMnamgoActive = $mnamgo.classList.contains(IS_ACTIVE_CLASS)
+
+			const loop = () => {
+				const $active = isMnamgoActive ? $mnamgo : $time
+				const $inactive = isMnamgoActive ? $time : $mnamgo
+				const now = new Date()
+
+				const nowFormatted = `${now
+					.getHours()
+					.toString()
+					.padStart(2, '0')}:${now
+					.getMinutes()
+					.toString()
+					.padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`
+
+				const shouldMnamgoBeActive =
+					nowFormatted >= showMnamgoSince && nowFormatted < showMnamgoUntil
+
+				const toggleIframes = shouldMnamgoBeActive !== isMnamgoActive
+
+				if (toggleIframes) {
+					$active.classList.remove(IS_ACTIVE_CLASS)
+					$inactive.classList.add(IS_ACTIVE_CLASS)
+					isMnamgoActive = !isMnamgoActive
+				}
+
+				setTimeout(loop, 300)
+			}
+			loop()
+		</script>
+	</body>
+</html>
